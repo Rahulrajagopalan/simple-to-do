@@ -8,16 +8,17 @@ class DatePicking extends StatefulWidget {
 }
 
 class _DatePickingState extends State<DatePicking> {
+
   Future<DateTime> pickDate() async {
     var selectedDate = await showDatePicker(
         context: context, firstDate: DateTime(2021), lastDate: DateTime(2025));
-    if (selectedDate != null && selectedDate != datePicked) {
+    if (selectedDate != null) {
       return selectedDate;
     }
     return DateTime.now();
   }
 
-  DateTime datePicked = DateTime.now();
+  // DateTime datePicked = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
