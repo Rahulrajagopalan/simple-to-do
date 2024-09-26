@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "65865440662",
+    "project_id": "cinebyte-network-application",
+    "storage_bucket": "cinebyte-network-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65865440662:android:e719baa242b531598591b7",
+        "android_client_info": {
+          "package_name": "com.example.cinebyte_network_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA21t2a-XP50S7MMO5oSpGFm4rlOaXRKDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65865440662:android:1c71a5721df861d58591b7",
+        "android_client_info": {
+          "package_name": "com.example.simple_todo_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA21t2a-XP50S7MMO5oSpGFm4rlOaXRKDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

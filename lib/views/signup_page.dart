@@ -3,21 +3,29 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_todo_app/controller/fun_provider.dart';
-import 'package:simple_todo_app/controller/validation.dart';
-import 'package:simple_todo_app/signup_page.dart';
+import 'package:simple_todo_app/database_logics/auth_fun.dart';
+import 'package:simple_todo_app/database_logics/data_services.dart';
+import 'package:simple_todo_app/models/user_model.dart';
+import 'package:simple_todo_app/views/home_screen.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class SignupPage extends StatelessWidget {
+  SignupPage({super.key});
+  TextEditingController nameController = TextEditingController();
+  TextEditingController placeController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final formKey= GlobalKey<FormState>();
-  final validate = Validation();
+  var formKey = GlobalKey<FormState>();
+  var auth = AuthFun();
+  var dbService = DataServices();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[400],
-      // appBar: AppBar(title: Text("Login page"),),
+      appBar: AppBar(
+        title: Text("Back to Login"),
+        backgroundColor: Colors.grey[400],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -26,10 +34,10 @@ class LoginPage extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  height: 150,
+                  height: 100,
                 ),
                 Text(
-                  "Login to do...",
+                  "Welcome to do...",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -38,15 +46,22 @@ class LoginPage extends StatelessWidget {
                   height: 20,
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if(value == null || value.isEmpty){
-                      return "Enter a value";
-                    }
-                    else if(!validate.isValidEmail(value)){
-                      return "Enter a valid email";
-                    }
-                    return null;
-                  },
+                  controller: nameController,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), hintText: "Full name"),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: placeController,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), hintText: "Place"),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(), hintText: "Enter email"),
@@ -57,12 +72,6 @@ class LoginPage extends StatelessWidget {
                 Consumer<FunProvider>(
                   builder: (context, funProvider, child) {
                     return TextFormField(
-                      validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Required";
-                            }
-                            return validate.isValidPass(value);
-                          },
                       controller: passwordController,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -70,7 +79,6 @@ class LoginPage extends StatelessWidget {
                           suffixIcon: IconButton(
                               onPressed: () {
                                 funProvider.obsText();
-                                log(funProvider.obs.toString());
                               },
                               icon: funProvider.obs
                                   ? Icon(Icons.remove_red_eye_outlined)
@@ -91,38 +99,29 @@ class LoginPage extends StatelessWidget {
                           horizontal: 60.0, vertical: 5),
                       child: TextButton(
                           onPressed: () {
-                            if(formKey.currentState!.validate()){
-                              log(emailController.text);
-                            }
+                            log("email is: ${emailController.text}");
+                            UserModel user = UserModel(
+                                name: nameController.text,
+                                place: placeController.text,
+                                email: emailController.text,
+                                password: passwordController.text);
+                            auth
+                                .createUser(emailController.text,
+                                    passwordController.text, user)
+                                .then((userID) {
+                              dbService.storeUser(userID, user);
+                            }).then((onValue) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
+                            });
                           },
                           child: Text(
-                            "Login",
+                            "SignUp",
                             style: TextStyle(color: Colors.white),
                           )),
                     )),
-                SizedBox(
-                  height: 50,
-                ),
-                Row(
-                  children: [
-                    TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          "Forgot password",
-                          style: TextStyle(color: Colors.black),
-                        )),
-                    Spacer(),
-                    // Text("Have an account"),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> SignupPage()));
-                        },
-                        child: Text(
-                          "SignUp",
-                          style: TextStyle(color: Colors.black),
-                        )),
-                  ],
-                )
               ],
             ),
           ),
